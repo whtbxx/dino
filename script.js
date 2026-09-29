@@ -1,7 +1,16 @@
+import "@material/web/all.js";
+import { styles as typescaleStyles } from "@material/web/typography/md-typescale-styles.js";
+
+document.adoptedStyleSheets = [
+  ...document.adoptedStyleSheets,
+  typescaleStyles.styleSheet,
+];
+
 const firstNumberEl = document.getElementById("first-number");
 const secondNumberEl = document.getElementById("second-number");
 const form = document.getElementById("sum-form");
 const answerInput = document.getElementById("answer");
+const checkButton = document.getElementById("check-button");
 const feedback = document.getElementById("feedback");
 const nextButton = document.getElementById("next-question");
 const correctCountEl = document.getElementById("correct-count");
@@ -18,6 +27,14 @@ function renderScores() {
   incorrectCountEl.textContent = String(incorrectCount);
 }
 
+function hasAnswer() {
+  return answerInput.value.trim() !== "";
+}
+
+function syncCheckButton() {
+  checkButton.disabled = solved || !hasAnswer();
+}
+
 function randomNumber() {
   return Math.floor(Math.random() * 10) + 1;
 }
@@ -31,10 +48,11 @@ function newQuestion() {
   secondNumberEl.textContent = String(secondNumber);
   answerInput.value = "";
   answerInput.disabled = false;
-  form.querySelector("button[type='submit']").disabled = false;
+  answerInput.error = false;
   feedback.textContent = "";
-  feedback.className = "feedback";
+  feedback.className = "feedback md-typescale-body-medium";
   nextButton.hidden = true;
+  syncCheckButton();
   answerInput.focus();
 }
 
@@ -50,7 +68,8 @@ form.addEventListener("submit", (event) => {
 
   if (answerInput.value.trim() === "" || Number.isNaN(given)) {
     feedback.textContent = "Enter a number, then try again.";
-    feedback.className = "feedback incorrect";
+    feedback.className = "feedback md-typescale-body-medium incorrect";
+    answerInput.error = true;
     answerInput.focus();
     return;
   }
@@ -60,9 +79,10 @@ form.addEventListener("submit", (event) => {
     correctCount += 1;
     renderScores();
     feedback.textContent = "Correct!";
-    feedback.className = "feedback correct";
+    feedback.className = "feedback md-typescale-body-medium correct";
+    answerInput.error = false;
     answerInput.disabled = true;
-    form.querySelector("button[type='submit']").disabled = true;
+    syncCheckButton();
     nextButton.hidden = false;
     nextButton.focus();
     return;
@@ -71,11 +91,19 @@ form.addEventListener("submit", (event) => {
   incorrectCount += 1;
   renderScores();
   feedback.textContent = "That answer is not correct. Please retry.";
-  feedback.className = "feedback incorrect";
+  feedback.className = "feedback md-typescale-body-medium incorrect";
+  answerInput.error = true;
+  answerInput.value = "";
+  syncCheckButton();
   answerInput.focus();
-  answerInput.select();
 });
 
+answerInput.addEventListener("input", () => {
+  if (hasAnswer()) {
+    answerInput.error = false;
+  }
+  syncCheckButton();
+});
 nextButton.addEventListener("click", newQuestion);
 
 renderScores();
