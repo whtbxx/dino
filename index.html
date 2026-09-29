@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dino Math</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="card">
+      <p class="eyebrow">Dino Math</p>
+      <h1>Add these two numbers</h1>
+      <ul class="scoreboard" aria-label="Session score">
+        <li>
+          <span class="score-label">Correct</span>
+          <span class="score-value" id="correct-count">0</span>
+        </li>
+        <li>
+          <span class="score-label">Incorrect</span>
+          <span class="score-value" id="incorrect-count">0</span>
+        </li>
+      </ul>
+      <p class="question" id="question" aria-live="polite">
+        <span id="first-number">?</span>
+        <span class="operator" aria-hidden="true">+</span>
+        <span id="second-number">?</span>
+      </p>
+      <form id="sum-form">
+        <label for="answer">Your answer</label>
+        <input
+          id="answer"
+          name="answer"
+          type="number"
+          inputmode="numeric"
+          required
+          autocomplete="off"
+        />
+        <button type="submit">Check</button>
+      </form>
+      <p class="feedback" id="feedback" role="status" aria-live="polite"></p>
+      <button type="button" id="next-question" class="secondary" hidden>
+        Next question
+      </button>
+    </main>
+    <script src="script.js"></script>
+  </body>
+</html>
