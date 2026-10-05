@@ -1,51 +1,33 @@
-# 🦖 Dino Dash
+# Dino Games
 
-A kid-friendly maths race: solve addition problems by popping answer bubbles before the dino catches you.
+Two kid-friendly maths games in one static site.
 
-## How to play
+| Game | Path | Idea |
+|------|------|------|
+| **Dino Dash** | [`dash/`](dash/) | Race a chasing dino by popping answer bubbles |
+| **Dino Battles X** | [`battles-x/`](battles-x/) | Hatch an egg, then fight with maths hits in an arena |
 
-1. You start **4 steps** ahead of the dino on a 12-step track.
-2. Each round shows an addition question (`1–10 + 1–10`) with **4 bubbles** (one correct, three distractors).
-3. **Correct answer** → you move forward 1 step (or **2** on a turbo streak of 3+).
-4. **Wrong answer** → that bubble is disabled and the dino stomps one step closer. Keep trying the other bubbles.
-5. Reach the finish first to win. If the dino catches up, race again!
-
-**Desktop tip:** press keys `1`–`4` to pick bubbles.
+Open the root [`index.html`](index.html) to choose a game.
 
 ## Run locally
 
-This is a static site (no build step), but Material Web components load from a CDN via ES modules, so open it through a local server rather than `file://`.
+Static HTML/CSS/JS (no build), but Material Web loads from a CDN, so use a local server:
 
 ```bash
-# from the project folder
 python3 -m http.server 8766
 ```
 
 Then visit [http://127.0.0.1:8766/](http://127.0.0.1:8766/).
 
-A network connection is required the first time so the browser can fetch fonts and `@material/web` from the CDN.
+A network connection is needed the first time for fonts and `@material/web`.
 
-## Project layout
+## Layout
 
-| File | Role |
-|------|------|
-| `index.html` | Page structure: track, quiz, end dialog |
-| `styles.css` | Material 3 green theme, track, bubbles, responsive layout |
-| `script.js` | Game state, questions, scoring, win/lose |
+```
+index.html      # game chooser
+styles.css      # chooser styles
+dash/           # Dino Dash race
+battles-x/      # Dino Battles X fight
+```
 
-## Tech notes
-
-- **Vanilla HTML / CSS / JS** — no bundler or framework
-- **Material Web** (`md-filled-button`, `md-icon`) for the “Race again” dialog
-- **Material 3 green palette** with light/dark via `prefers-color-scheme`
-- **Accessibility:** live feedback, labelled controls, keyboard shortcuts, `prefers-reduced-motion`
-- **Mobile-first layout:** bubbles sit in the thumb zone; desktop widens the track and shows key hints
-
-## Game constants (in `script.js`)
-
-| Constant | Value | Meaning |
-|----------|-------|---------|
-| `FINISH` | 12 | Steps to the finish line |
-| `PLAYER_START` | 4 | Your head start |
-| `MAX_GAP` | 6 | Max lead before the dino keeps pace |
-| `STREAK_FOR_BOOST` | 3 | Correct answers in a row for turbo (+2 steps) |
+Each game folder has its own `index.html`, `styles.css`, and `script.js`.
