@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Dino Battles X</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0">
+  <script type="importmap">
+    { "imports": { "@material/web/": "https://esm.run/@material/web/" } }
+  </script>
+  <script type="module">
+    import '@material/web/all.js';
+  </script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app" id="app">
+    <!-- 1. Egg pick -->
+    <section class="screen" id="eggScreen" aria-labelledby="eggHeading">
+      <h1 id="eggHeading">🥚 Dino Battles X</h1>
+      <p class="subtitle">Pick an egg to hatch your fighter!</p>
+      <div class="eggs" role="group" aria-label="Choose an egg">
+        <button type="button" class="egg-btn" data-color="red" aria-label="Pick the red egg">
+          <span class="egg-sprite" aria-hidden="true">🥚</span>
+          <span class="egg-tint red" aria-hidden="true"></span>
+          <span class="egg-label">Red</span>
+        </button>
+        <button type="button" class="egg-btn" data-color="yellow" aria-label="Pick the yellow egg">
+          <span class="egg-sprite" aria-hidden="true">🥚</span>
+          <span class="egg-tint yellow" aria-hidden="true"></span>
+          <span class="egg-label">Yellow</span>
+        </button>
+        <button type="button" class="egg-btn" data-color="blue" aria-label="Pick the blue egg">
+          <span class="egg-sprite" aria-hidden="true">🥚</span>
+          <span class="egg-tint blue" aria-hidden="true"></span>
+          <span class="egg-label">Blue</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- 2. Hatch -->
+    <section class="screen" id="hatchScreen" hidden aria-labelledby="hatchHeading" aria-live="polite">
+      <h2 id="hatchHeading" class="visually-hidden">Hatching</h2>
+      <div class="hatch-stage" id="hatchStage">
+        <div class="hatch-egg" id="hatchEgg" aria-hidden="true">
+          <span class="egg-sprite big">🥚</span>
+          <span class="egg-tint" id="hatchTint"></span>
+          <span class="crack" id="crack" hidden>💥</span>
+        </div>
+        <div class="hatch-baby" id="hatchBaby" hidden aria-hidden="true"></div>
+      </div>
+      <p class="hatch-msg" id="hatchMsg">Your egg is hatching…</p>
+    </section>
+
+    <!-- 3. Fight -->
+    <section class="screen fight" id="fightScreen" hidden aria-labelledby="fightHeading">
+      <header class="top-bar">
+        <h1 id="fightHeading">⚔️ Dino Battles X</h1>
+      </header>
+
+      <div class="arena" id="arena" role="img" aria-label="Battle arena">
+        <!-- Grassland scenery (pure CSS/SVG) -->
+        <div class="arena-bg" aria-hidden="true">
+          <div class="sky"></div>
+          <svg class="hills" viewBox="0 0 400 80" preserveAspectRatio="none">
+            <ellipse cx="60" cy="70" rx="90" ry="50" fill="var(--hill-far)"/>
+            <ellipse cx="200" cy="62" rx="110" ry="55" fill="var(--hill-mid)"/>
+            <ellipse cx="340" cy="68" rx="95" ry="48" fill="var(--hill-far)"/>
+          </svg>
+          <div class="sun-disk"></div>
+          <div class="cloud-shape c1"></div>
+          <div class="cloud-shape c2"></div>
+          <div class="ground">
+            <svg class="grass-tufts" viewBox="0 0 400 40" preserveAspectRatio="none">
+              <path d="M20 40 Q22 18 24 40 M28 40 Q30 12 32 40 M36 40 Q38 22 40 40" fill="none" stroke="var(--grass-dark)" stroke-width="2.5" stroke-linecap="round"/>
+              <path d="M90 40 Q92 16 94 40 M98 40 Q100 10 102 40 M106 40 Q108 20 110 40" fill="none" stroke="var(--grass-dark)" stroke-width="2.5" stroke-linecap="round"/>
+              <path d="M170 40 Q172 14 174 40 M178 40 Q180 8 182 40 M186 40 Q188 18 190 40" fill="none" stroke="var(--grass-dark)" stroke-width="2.5" stroke-linecap="round"/>
+              <path d="M250 40 Q252 16 254 40 M258 40 Q260 10 262 40 M266 40 Q268 22 270 40" fill="none" stroke="var(--grass-dark)" stroke-width="2.5" stroke-linecap="round"/>
+              <path d="M330 40 Q332 14 334 40 M338 40 Q340 8 342 40 M346 40 Q348 20 350 40" fill="none" stroke="var(--grass-dark)" stroke-width="2.5" stroke-linecap="round"/>
+              <path d="M380 40 Q382 18 384 40 M388 40 Q390 12 392 40" fill="none" stroke="var(--grass-dark)" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="fighter player" id="playerFighter">
+          <div class="hp-wrap">
+            <span class="hp-name" id="playerName">You</span>
+            <div class="hp-bar" role="meter" aria-valuemin="0" aria-valuemax="5" aria-valuenow="5" aria-label="Your energy" id="playerHpBar">
+              <div class="hp-fill" id="playerHpFill"></div>
+            </div>
+            <span class="hp-num" id="playerHpNum" aria-hidden="true">5</span>
+          </div>
+          <div class="dino-sprite" id="playerSprite" aria-hidden="true"></div>
+        </div>
+
+        <div class="vs" aria-hidden="true">VS</div>
+
+        <!-- Comic POW burst (centered between dinos) -->
+        <div class="pow-burst" id="powBurst" aria-hidden="true">
+          <svg class="pow-shape" viewBox="0 0 120 120" aria-hidden="true">
+            <polygon points="60,4 70,28 96,18 82,42 116,50 82,60 96,88 70,76 60,110 50,76 24,88 38,60 4,50 38,42 24,18 50,28"
+              fill="#ffeb3b" stroke="#111" stroke-width="3" stroke-linejoin="round"/>
+            <polygon points="60,18 67,34 86,28 76,44 100,52 76,60 86,78 67,70 60,92 53,70 34,78 44,60 20,52 44,44 34,28 53,34"
+              fill="#ff6f00" stroke="#111" stroke-width="2" stroke-linejoin="round"/>
+          </svg>
+          <span class="pow-text" id="powText">POW!</span>
+        </div>
+
+        <div class="fighter opponent" id="oppFighter">
+          <div class="hp-wrap">
+            <span class="hp-name">Rival</span>
+            <div class="hp-bar" role="meter" aria-valuemin="0" aria-valuemax="5" aria-valuenow="5" aria-label="Rival energy" id="oppHpBar">
+              <div class="hp-fill opp" id="oppHpFill"></div>
+            </div>
+            <span class="hp-num" id="oppHpNum" aria-hidden="true">5</span>
+          </div>
+          <div class="dino-sprite face-left" id="oppSprite" aria-hidden="true"></div>
+        </div>
+      </div>
+
+      <section class="quiz" aria-labelledby="question">
+        <h2 id="question" class="question">? + ?</h2>
+        <p id="feedback" class="feedback" role="status" aria-live="polite">Pop the right bubble to punch!</p>
+        <div class="choices" id="choices" role="group" aria-label="Answer choices"></div>
+      </section>
+    </section>
+  </main>
+
+  <dialog id="endDialog" aria-labelledby="endTitle" aria-describedby="endText">
+    <div class="end-emoji" id="endEmoji" aria-hidden="true">🏆</div>
+    <h2 id="endTitle">You won!</h2>
+    <p id="endText"></p>
+    <md-filled-button id="restartBtn"><md-icon slot="icon">replay</md-icon>Play again</md-filled-button>
+  </dialog>
+
+  <!-- Inline SVG dino template (cloned into sprites) -->
+  <template id="dinoSvgTemplate">
+    <svg class="dino-svg" viewBox="0 0 140 160" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <!-- Tail -->
+      <path class="dino-body" d="M12 95 C2 88, -2 72, 8 64 C16 58, 28 68, 36 80 C40 88, 34 96, 26 98 Z"/>
+      <!-- Body -->
+      <ellipse class="dino-body" cx="62" cy="95" rx="38" ry="36"/>
+      <!-- Belly -->
+      <ellipse class="dino-belly" cx="68" cy="104" rx="24" ry="22"/>
+      <!-- Neck -->
+      <path class="dino-body" d="M82 70 C88 52, 96 36, 104 28 C108 24, 116 24, 120 30 C124 36, 122 48, 116 58 C110 68, 96 74, 86 76 Z"/>
+      <!-- Head -->
+      <ellipse class="dino-body" cx="116" cy="32" rx="22" ry="20"/>
+      <!-- Snout -->
+      <ellipse class="dino-body" cx="132" cy="36" rx="14" ry="11"/>
+      <!-- Lower jaw -->
+      <path class="dino-body" d="M122 42 C128 48, 136 48, 140 44 L138 50 C132 56, 122 54, 118 48 Z"/>
+      <!-- Teeth -->
+      <path d="M126 44 L128 52 L130 44 M132 44 L134 51 L136 44" fill="#fff" stroke="#222" stroke-width="0.9" stroke-linejoin="round"/>
+      <!-- Eye white + pupil looking forward (right) -->
+      <circle class="dino-eye-white" cx="112" cy="28" r="8"/>
+      <circle class="dino-eye" cx="115" cy="28" r="4"/>
+      <circle cx="116.5" cy="26.5" r="1.4" fill="#fff"/>
+      <!-- Brow -->
+      <path class="dino-ridge" d="M100 18 C106 12, 116 12, 124 16" fill="none" stroke-width="3.5" stroke-linecap="round"/>
+      <!-- Nostril -->
+      <ellipse cx="136" cy="32" rx="2.2" ry="1.6" fill="#222"/>
+      <!-- Small arm -->
+      <path class="dino-body" d="M78 88 C86 94, 94 98, 100 96 C102 95, 102 92, 98 90 C92 88, 86 86, 80 84 Z"/>
+      <ellipse class="dino-body" cx="102" cy="94" rx="5" ry="4"/>
+      <!-- Back leg (thigh + shin + foot) -->
+      <path class="dino-body" d="M42 120 C38 132, 36 142, 38 150 C40 154, 50 154, 52 150 C54 144, 52 134, 50 124 Z"/>
+      <ellipse class="dino-body" cx="44" cy="152" rx="14" ry="7"/>
+      <!-- Front leg -->
+      <path class="dino-body" d="M72 122 C70 134, 68 144, 72 152 C74 156, 86 156, 88 152 C90 146, 88 136, 84 126 Z"/>
+      <ellipse class="dino-body" cx="80" cy="154" rx="14" ry="7"/>
+      <!-- Spikes -->
+      <path class="dino-spike" d="M38 68 L44 50 L50 68 Z"/>
+      <path class="dino-spike" d="M52 62 L58 42 L64 62 Z"/>
+      <path class="dino-spike" d="M66 58 L72 38 L78 58 Z"/>
+      <path class="dino-spike" d="M80 60 L86 42 L92 62 Z"/>
+      <path class="dino-spike" d="M94 64 L100 48 L104 66 Z"/>
+    </svg>
+  </template>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
